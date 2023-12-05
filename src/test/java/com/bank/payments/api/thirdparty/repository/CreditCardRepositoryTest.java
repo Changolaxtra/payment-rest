@@ -107,7 +107,7 @@ class CreditCardRepositoryTest {
     @Test
     public void givenInvalidCardNumberAndLookingForItShouldThrowException() {
         Exception exception = assertThrows(BankRepositoryException.class, () -> {
-            repository.find(null);
+            repository.exists(null);
         });
 
         assertNotNull(exception);

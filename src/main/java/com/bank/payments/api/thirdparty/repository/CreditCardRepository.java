@@ -3,6 +3,7 @@ package com.bank.payments.api.thirdparty.repository;
 import com.bank.payments.api.model.CreditCard;
 import com.bank.payments.api.thirdparty.exception.BankRepositoryException;
 import jakarta.annotation.PostConstruct;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Repository;
 
@@ -10,6 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+@Slf4j
 @Repository
 public class CreditCardRepository implements BankRepository<CreditCard, String> {
 
@@ -22,12 +24,14 @@ public class CreditCardRepository implements BankRepository<CreditCard, String> 
 
     @Override
     public CreditCard save(final String cardNumber, final CreditCard creditCard) {
+        log.info("Saving {} {}", cardNumber, creditCard);
         validateCardForSave(cardNumber, creditCard);
         return numberToCreditCard.put(cardNumber, creditCard);
     }
 
     @Override
     public CreditCard find(final String cardNumber) {
+        log.info("Searching {}", cardNumber);
         if (isNotPresent(cardNumber)) {
             throw new BankRepositoryException("Card does not exist");
         }
@@ -36,6 +40,7 @@ public class CreditCardRepository implements BankRepository<CreditCard, String> 
 
     @Override
     public CreditCard update(final String cardNumber, final CreditCard updatedCard) {
+        log.info("Updating {} {}", cardNumber, updatedCard);
         validateCardForUpdate(cardNumber, updatedCard);
         numberToCreditCard.put(cardNumber,
                 new CreditCard(cardNumber,
@@ -47,6 +52,7 @@ public class CreditCardRepository implements BankRepository<CreditCard, String> 
 
     @Override
     public boolean exists(final String cardNumber) {
+        log.info("Checking {}", cardNumber);
         if (StringUtils.isEmpty(cardNumber)) {
             throw new BankRepositoryException("Invalid Card number : null or blank");
         }
