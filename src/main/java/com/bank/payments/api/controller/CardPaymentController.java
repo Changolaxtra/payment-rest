@@ -20,6 +20,7 @@ public class CardPaymentController {
             produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE)
     public CardPaymentResponse process(@RequestBody final CardPaymentRequest request) {
+        //TODO Add the implementation to make a payment.
         return new CardPaymentResponse(true, BigDecimal.ONE);
     }
 }

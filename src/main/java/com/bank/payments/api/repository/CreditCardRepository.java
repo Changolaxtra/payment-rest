@@ -1,12 +1,10 @@
 package com.bank.payments.api.repository;
 
 import com.bank.payments.api.model.CreditCard;
-import org.springframework.stereotype.Repository;
 
 import java.util.Map;
 
 // TODO Add implementation of the methods to store, read and update the credit card and balance.
-@Repository
 public class CreditCardRepository implements BankRepository<String, CreditCard> {
 
     private Map<String, CreditCard> numberToCreditCard;
