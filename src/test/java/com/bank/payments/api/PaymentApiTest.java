@@ -4,6 +4,7 @@ import com.bank.payments.api.dto.CardPaymentRequest;
 import com.bank.payments.api.dto.CardPaymentResponse;
 import com.bank.payments.api.dto.CreateCardRequest;
 import com.bank.payments.api.dto.CreateCardResponse;
+import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 
@@ -48,7 +49,13 @@ public class PaymentApiTest extends JsonApiTest {
                                           final Integer cvv,
                                           final BigDecimal balance) throws Exception {
 
-        final CreateCardRequest createCardRequest = new CreateCardRequest(cardNumber, cvv, balance);
+        final CreateCardRequest createCardRequest =
+                CreateCardRequest.builder()
+                        .number(cardNumber)
+                        .cvv(cvv)
+                        .balance(balance)
+                        .build();
+
         final String jsonRequest = super.mapToJson(createCardRequest);
         return makeApiCall(jsonRequest, CREATE_CARD_ENDPOINT, CreateCardResponse.class);
     }
@@ -57,7 +64,13 @@ public class PaymentApiTest extends JsonApiTest {
                                             final Integer cvv,
                                             final BigDecimal amount) throws Exception {
 
-        final CardPaymentRequest cardPaymentRequest = new CardPaymentRequest(cardNumber, cvv, amount);
+        final CardPaymentRequest cardPaymentRequest =
+                CardPaymentRequest.builder()
+                        .number(cardNumber)
+                        .cvv(cvv)
+                        .amount(amount)
+                        .build();
+
         final String jsonRequest = super.mapToJson(cardPaymentRequest);
         return makeApiCall(jsonRequest, PROCESS_PAYMENT_ENDPOINT, CardPaymentResponse.class);
     }

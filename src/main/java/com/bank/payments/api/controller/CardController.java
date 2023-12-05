@@ -17,6 +17,6 @@ public class CardController {
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public CreateCardResponse create(@RequestBody final CreateCardRequest request) {
         // TODO Add implementation to store new credit card.
-        return new CreateCardResponse(request.getNumber(), true);
+        return CreateCardResponse.builder().number(request.getNumber()).successful(true).build();
     }
 }

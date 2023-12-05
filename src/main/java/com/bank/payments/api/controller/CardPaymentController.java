@@ -21,6 +21,6 @@ public class CardPaymentController {
             consumes = MediaType.APPLICATION_JSON_VALUE)
     public CardPaymentResponse process(@RequestBody final CardPaymentRequest request) {
         //TODO Add the implementation to make a payment.
-        return new CardPaymentResponse(true, BigDecimal.ONE);
+        return CardPaymentResponse.builder().balance(BigDecimal.ONE).successful(true).build();
     }
 }
