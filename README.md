@@ -1,9 +1,9 @@
 # payment-rest
-This is a simple project to create a REST API to process payments, used as interview for Spring Boot.
+This is a simple project to create a REST API to process payments, used as an interview  problem for Spring Boot.
 
 
 ## Instructions
-Implement  the functionality to create credit cards and modify its balance using an API.
+Implement  the functionality to create credit cards and modify their balance using an API.
 
 ### Test
 
