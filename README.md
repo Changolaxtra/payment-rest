@@ -5,14 +5,11 @@ This is a simple project to create a REST API to process payments, used as inter
 ## Instructions
 Implement  the functionality to create credit cards and modify its balance using an API.
 
-Packages to review:
-- Repository
-- Controllers
-
 ### Test
 
-Uncomment the `@Test` in `PaymentApiTest` class
+Once the code implementation is finished, uncomment the `@Test` in `PaymentApiTest` class.
 
 #### Some Rules:
 - The project structure and classes can be modified.
+- Please do not modify `thirdparty` package.
 - Please do not modify the endpoints and unit test.
