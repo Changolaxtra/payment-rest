@@ -32,17 +32,17 @@ public class PaymentApiTest extends JsonApiTest {
         assertFalse(createCardResponse2.isSuccessful());
 
         // Process payment with wrong cvv, should return Successful=false
-        final CardPaymentResponse paymentResponse1 = makePayment(CREATE_CARD_ENDPOINT, WRONG_CVV, new BigDecimal(100));
+        final CardPaymentResponse paymentResponse1 = makePayment(CARD_NUMBER, WRONG_CVV, new BigDecimal(100));
         assertFalse(paymentResponse1.isSuccessful());
 
         // Process payment with correct cvv and enough balance, should return Successful=true
-        final CardPaymentResponse paymentResponse2 = makePayment(CREATE_CARD_ENDPOINT, CVV, new BigDecimal(700));
+        final CardPaymentResponse paymentResponse2 = makePayment(CARD_NUMBER, CVV, new BigDecimal(700));
         assertTrue(paymentResponse2.isSuccessful());
         assertEquals(new BigDecimal(300), paymentResponse2.getBalance());
 
         // Process payment with correct cvv and not enough balance, should return Successful=false
-        final CardPaymentResponse paymentResponse3 = makePayment(CREATE_CARD_ENDPOINT, CVV, new BigDecimal(500));
-        assertFalse(paymentResponse2.isSuccessful());
+        final CardPaymentResponse paymentResponse3 = makePayment(CARD_NUMBER, CVV, new BigDecimal(500));
+        assertFalse(paymentResponse3.isSuccessful());
     }
 
     private CreateCardResponse createCard(final String cardNumber,
