@@ -27,7 +27,11 @@ public class CreditCardRepository implements BankRepository<CreditCard, String> 
     public CreditCard save(final CreditCard creditCard) {
         log.info("Saving {}", creditCard);
         validateCardForSave(creditCard);
-        return numberToCreditCard.put(creditCard.number(), creditCard);
+        numberToCreditCard.put(creditCard.number(),
+                new CreditCard(creditCard.number(),
+                creditCard.cvv(),
+                creditCard.balance()));
+        return numberToCreditCard.get(creditCard.number());
     }
 
     @Override
