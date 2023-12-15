@@ -2,12 +2,15 @@ package com.bank.payments.api.thirdparty.repository;
 
 import com.bank.payments.api.model.CreditCard;
 import com.bank.payments.api.thirdparty.exception.BankRepositoryException;
+import com.bank.payments.api.thirdparty.exception.ErrorMessage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class CreditCardRepositoryTest {
 
@@ -20,27 +23,28 @@ class CreditCardRepositoryTest {
     void setUp() {
         repository = new CreditCardRepository();
         repository.init();
-        repository.save(CARD_NUMBER, new CreditCard(CARD_NUMBER, 123, new BigDecimal(500)));
+        repository.save(new CreditCard(CARD_NUMBER, 123, new BigDecimal(500)));
+    }
+
+
+    @Test
+    public void givenNullCardAndSavingItShouldThrowException() {
+        Exception exception = assertThrows(BankRepositoryException.class, () -> {
+            repository.save( null);
+        });
+
+        assertNotNull(exception);
+        assertEquals(ErrorMessage.CARD_IS_NULL, exception.getMessage());
     }
 
     @Test
     public void givenExitingCardNumberAndSavingItShouldThrowException() {
         Exception exception = assertThrows(BankRepositoryException.class, () -> {
-            repository.save(CARD_NUMBER, new CreditCard(CARD_NUMBER, 123, new BigDecimal(500)));
+            repository.save(new CreditCard(CARD_NUMBER, 123, new BigDecimal(500)));
         });
 
         assertNotNull(exception);
-        assertEquals("Card already exists", exception.getMessage());
-    }
-
-    @Test
-    public void givenMismatchCardNumberAndSavingItShouldThrowException() {
-        Exception exception = assertThrows(BankRepositoryException.class, () -> {
-            repository.save(CARD_NUMBER2, new CreditCard(CARD_NUMBER, 123, new BigDecimal(500)));
-        });
-
-        assertNotNull(exception);
-        assertEquals("Card Numbers mismatch", exception.getMessage());
+        assertEquals(ErrorMessage.CARD_ALREADY_EXISTS, exception.getMessage());
     }
 
     @Test
@@ -50,7 +54,7 @@ class CreditCardRepositoryTest {
         });
 
         assertNotNull(exception);
-        assertEquals("Card does not exist", exception.getMessage());
+        assertEquals(ErrorMessage.CARD_DOES_NOT_EXISTS, exception.getMessage());
     }
 
     @Test
@@ -66,37 +70,27 @@ class CreditCardRepositoryTest {
     @Test
     public void givenNonexistentCardNumberAndUpdatingItShouldThrowException() {
         Exception exception = assertThrows(BankRepositoryException.class, () -> {
-            repository.update(CARD_NUMBER2, new CreditCard(CARD_NUMBER2, 123, new BigDecimal(600)));
+            repository.update(new CreditCard(CARD_NUMBER2, 123, new BigDecimal(600)));
         });
 
         assertNotNull(exception);
-        assertEquals("Card does not exist", exception.getMessage());
+        assertEquals(ErrorMessage.CARD_DOES_NOT_EXISTS, exception.getMessage());
     }
 
     @Test
     public void givenNullCardAndUpdatingItShouldThrowException() {
         Exception exception = assertThrows(BankRepositoryException.class, () -> {
-            repository.update(CARD_NUMBER, null);
+            repository.update( null);
         });
 
         assertNotNull(exception);
-        assertEquals("Updated card is null", exception.getMessage());
+        assertEquals(ErrorMessage.CARD_IS_NULL, exception.getMessage());
     }
 
     @Test
-    public void givenMismatchCardNumberAndUpdatingItShouldThrowException() {
-        Exception exception = assertThrows(BankRepositoryException.class, () -> {
-            repository.update(CARD_NUMBER, new CreditCard(CARD_NUMBER2, 123, new BigDecimal(600)));
-        });
-
-        assertNotNull(exception);
-        assertEquals("Card Numbers mismatch", exception.getMessage());
-    }
-
-    @Test
-    public void givenCorrectCardNumberAndUpdatingItShouldThrowException() {
+    public void givenCorrectCardNumberAndUpdatingItShouldBeUpdated() {
         final CreditCard creditCard =
-                repository.update(CARD_NUMBER, new CreditCard(CARD_NUMBER, 123, new BigDecimal(700)));
+                repository.update(new CreditCard(CARD_NUMBER, 123, new BigDecimal(700)));
 
         assertNotNull(creditCard);
         assertEquals(CARD_NUMBER, creditCard.number());
@@ -111,6 +105,6 @@ class CreditCardRepositoryTest {
         });
 
         assertNotNull(exception);
-        assertEquals("Invalid Card number : null or blank", exception.getMessage());
+        assertEquals(ErrorMessage.INVALID_CARD_NUMBER, exception.getMessage());
     }
 }

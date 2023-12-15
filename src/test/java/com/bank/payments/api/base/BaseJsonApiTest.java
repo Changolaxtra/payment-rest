@@ -1,4 +1,4 @@
-package com.bank.payments.api;
+package com.bank.payments.api.base;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -19,7 +19,7 @@ import java.io.IOException;
 
 @SpringBootTest
 @WebAppConfiguration
-public class JsonApiTest {
+public class BaseJsonApiTest {
 
     protected MockMvc mvc;
     @Autowired

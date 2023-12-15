@@ -9,5 +9,6 @@ import lombok.extern.jackson.Jacksonized;
 @Jacksonized
 public class CreateCardResponse {
     private String number;
+    private String message;
     private boolean successful;
 }

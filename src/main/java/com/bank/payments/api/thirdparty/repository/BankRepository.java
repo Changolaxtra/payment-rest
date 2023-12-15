@@ -1,8 +1,8 @@
 package com.bank.payments.api.thirdparty.repository;
 
-public interface BankRepository<T, I> {
-    T save(I key, T entity);
-    T find(I key);
-    T update(I key,T entity);
-    boolean exists(I key);
+public interface BankRepository<T, K> {
+    T save(T entity);
+    T find(K key);
+    T update(T entity);
+    boolean exists(K key);
 }

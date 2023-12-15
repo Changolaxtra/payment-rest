@@ -1,9 +1,11 @@
 package com.bank.payments.api;
 
+import com.bank.payments.api.base.BaseJsonApiTest;
 import com.bank.payments.api.dto.CardPaymentRequest;
 import com.bank.payments.api.dto.CardPaymentResponse;
 import com.bank.payments.api.dto.CreateCardRequest;
 import com.bank.payments.api.dto.CreateCardResponse;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
@@ -12,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class PaymentApiTest extends JsonApiTest {
+public class PaymentApiTest extends BaseJsonApiTest {
 
     private static final String CREATE_CARD_ENDPOINT = "/card";
     private static final String PROCESS_PAYMENT_ENDPOINT = "/card/payment/process";
@@ -23,7 +25,8 @@ public class PaymentApiTest extends JsonApiTest {
     private static final BigDecimal BALANCE = new BigDecimal(1000);
     private static final int WRONG_CVV = 456;
 
-    //@Test
+    @Disabled
+    @Test
     public void createCreditCardAndMakePayment() throws Exception {
         // Create Credit Card, with negative balance should return Successful=false
         final CreateCardResponse createCardResponse0 = createCard(CARD_NUMBER, CVV, BigDecimal.TEN.negate());

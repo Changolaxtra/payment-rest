@@ -2,6 +2,7 @@ package com.bank.payments.api.thirdparty.repository;
 
 import com.bank.payments.api.model.CreditCard;
 import com.bank.payments.api.thirdparty.exception.BankRepositoryException;
+import com.bank.payments.api.thirdparty.exception.ErrorMessage;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -23,63 +24,65 @@ public class CreditCardRepository implements BankRepository<CreditCard, String> 
     }
 
     @Override
-    public CreditCard save(final String cardNumber, final CreditCard creditCard) {
-        log.info("Saving {} {}", cardNumber, creditCard);
-        validateCardForSave(cardNumber, creditCard);
-        return numberToCreditCard.put(cardNumber, creditCard);
+    public CreditCard save(final CreditCard creditCard) {
+        log.info("Saving {}", creditCard);
+        validateCardForSave(creditCard);
+        return numberToCreditCard.put(creditCard.number(), creditCard);
     }
 
     @Override
     public CreditCard find(final String cardNumber) {
         log.info("Searching {}", cardNumber);
-        if (isNotPresent(cardNumber)) {
-            throw new BankRepositoryException("Card does not exist");
-        }
+        validateExistence(cardNumber);
         return numberToCreditCard.get(cardNumber);
     }
 
     @Override
-    public CreditCard update(final String cardNumber, final CreditCard updatedCard) {
-        log.info("Updating {} {}", cardNumber, updatedCard);
-        validateCardForUpdate(cardNumber, updatedCard);
-        numberToCreditCard.put(cardNumber,
-                new CreditCard(cardNumber,
+    public CreditCard update(final CreditCard updatedCard) {
+        log.info("Updating {}", updatedCard);
+        validateCardForUpdate(updatedCard);
+        numberToCreditCard.put(updatedCard.number(),
+                new CreditCard(updatedCard.number(),
                         updatedCard.cvv(),
                         updatedCard.balance()));
 
-        return numberToCreditCard.get(cardNumber);
+        return numberToCreditCard.get(updatedCard.number());
     }
 
     @Override
     public boolean exists(final String cardNumber) {
-        log.info("Checking {}", cardNumber);
+        log.info("Exists? {}", cardNumber);
         if (StringUtils.isEmpty(cardNumber)) {
-            throw new BankRepositoryException("Invalid Card number : null or blank");
+            throw new BankRepositoryException(ErrorMessage.INVALID_CARD_NUMBER);
         }
         return numberToCreditCard.containsKey(cardNumber);
     }
 
-    private void validateCardForSave(final String cardNumber, final CreditCard creditCard) {
-        if (exists(cardNumber)) {
-            throw new BankRepositoryException("Card already exists");
-        }
+    private void validateCardForSave(final CreditCard creditCard) {
+        validateNullCard(creditCard);
+        validateAvailability(creditCard);
+    }
 
-        if (!StringUtils.equalsIgnoreCase(cardNumber, creditCard.number())) {
-            throw new BankRepositoryException("Card Numbers mismatch");
+    private void validateAvailability(CreditCard creditCard) {
+        if (exists(creditCard.number())) {
+            throw new BankRepositoryException(ErrorMessage.CARD_ALREADY_EXISTS);
         }
     }
 
-    private void validateCardForUpdate(final String cardNumber, final CreditCard updatedCard) {
-        if (Objects.isNull(updatedCard)) {
-            throw new BankRepositoryException("Updated card is null");
-        }
+    private void validateCardForUpdate(final CreditCard updatedCard) {
+        validateNullCard(updatedCard);
+        validateExistence(updatedCard.number());
+    }
 
+    private static void validateNullCard(CreditCard creditCard) {
+        if (Objects.isNull(creditCard)) {
+            throw new BankRepositoryException(ErrorMessage.CARD_IS_NULL);
+        }
+    }
+
+    private void validateExistence(String cardNumber) {
         if (isNotPresent(cardNumber)) {
-            throw new BankRepositoryException("Card does not exist");
-        }
-
-        if (!StringUtils.equalsIgnoreCase(cardNumber, updatedCard.number())) {
-            throw new BankRepositoryException("Card Numbers mismatch");
+            throw new BankRepositoryException(ErrorMessage.CARD_DOES_NOT_EXISTS);
         }
     }
 

@@ -11,5 +11,6 @@ import java.math.BigDecimal;
 @Jacksonized
 public class CardPaymentResponse {
     private boolean successful;
+    private String message;
     private BigDecimal balance;
 }
