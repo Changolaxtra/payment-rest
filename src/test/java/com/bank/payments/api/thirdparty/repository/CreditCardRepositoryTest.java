@@ -20,7 +20,7 @@ class CreditCardRepositoryTest {
     private CreditCardRepository repository;
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws BankRepositoryException {
         repository = new CreditCardRepository();
         repository.init();
         repository.save(new CreditCard(CARD_NUMBER, 123, new BigDecimal(500)));
@@ -58,7 +58,7 @@ class CreditCardRepositoryTest {
     }
 
     @Test
-    public void givenExistentCardNumberToFindItShouldReturnTheCorrectOne() {
+    public void givenExistentCardNumberToFindItShouldReturnTheCorrectOne() throws BankRepositoryException {
         final CreditCard creditCard = repository.find(CARD_NUMBER);
 
         assertNotNull(creditCard);
@@ -88,7 +88,7 @@ class CreditCardRepositoryTest {
     }
 
     @Test
-    public void givenCorrectCardNumberAndUpdatingItShouldBeUpdated() {
+    public void givenCorrectCardNumberAndUpdatingItShouldBeUpdated() throws BankRepositoryException {
         final CreditCard creditCard =
                 repository.update(new CreditCard(CARD_NUMBER, 123, new BigDecimal(700)));
 

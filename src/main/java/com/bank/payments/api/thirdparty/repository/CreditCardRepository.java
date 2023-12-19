@@ -24,25 +24,25 @@ public class CreditCardRepository implements BankRepository<CreditCard, String> 
     }
 
     @Override
-    public CreditCard save(final CreditCard creditCard) {
+    public CreditCard save(final CreditCard creditCard) throws BankRepositoryException {
         log.info("Saving {}", creditCard);
         validateCardForSave(creditCard);
         numberToCreditCard.put(creditCard.number(),
                 new CreditCard(creditCard.number(),
-                creditCard.cvv(),
-                creditCard.balance()));
+                        creditCard.cvv(),
+                        creditCard.balance()));
         return numberToCreditCard.get(creditCard.number());
     }
 
     @Override
-    public CreditCard find(final String cardNumber) {
+    public CreditCard find(final String cardNumber) throws BankRepositoryException {
         log.info("Searching {}", cardNumber);
         validateExistence(cardNumber);
         return numberToCreditCard.get(cardNumber);
     }
 
     @Override
-    public CreditCard update(final CreditCard updatedCard) {
+    public CreditCard update(final CreditCard updatedCard) throws BankRepositoryException {
         log.info("Updating {}", updatedCard);
         validateCardForUpdate(updatedCard);
         numberToCreditCard.put(updatedCard.number(),
@@ -54,7 +54,14 @@ public class CreditCardRepository implements BankRepository<CreditCard, String> 
     }
 
     @Override
-    public boolean exists(final String cardNumber) {
+    public void remove(String cardNumber) throws BankRepositoryException {
+        log.info("Removing Card: {}", cardNumber);
+        validateExistence(cardNumber);
+        numberToCreditCard.remove(cardNumber);
+    }
+
+    @Override
+    public boolean exists(final String cardNumber) throws BankRepositoryException {
         log.info("Exists? {}", cardNumber);
         if (StringUtils.isEmpty(cardNumber)) {
             throw new BankRepositoryException(ErrorMessage.INVALID_CARD_NUMBER);
@@ -62,35 +69,35 @@ public class CreditCardRepository implements BankRepository<CreditCard, String> 
         return numberToCreditCard.containsKey(cardNumber);
     }
 
-    private void validateCardForSave(final CreditCard creditCard) {
+    private void validateCardForSave(final CreditCard creditCard) throws BankRepositoryException {
         validateNullCard(creditCard);
         validateAvailability(creditCard);
     }
 
-    private void validateAvailability(CreditCard creditCard) {
+    private void validateAvailability(CreditCard creditCard) throws BankRepositoryException {
         if (exists(creditCard.number())) {
             throw new BankRepositoryException(ErrorMessage.CARD_ALREADY_EXISTS);
         }
     }
 
-    private void validateCardForUpdate(final CreditCard updatedCard) {
+    private void validateCardForUpdate(final CreditCard updatedCard) throws BankRepositoryException {
         validateNullCard(updatedCard);
         validateExistence(updatedCard.number());
     }
 
-    private static void validateNullCard(CreditCard creditCard) {
+    private void validateNullCard(CreditCard creditCard) throws BankRepositoryException {
         if (Objects.isNull(creditCard)) {
             throw new BankRepositoryException(ErrorMessage.CARD_IS_NULL);
         }
     }
 
-    private void validateExistence(String cardNumber) {
+    private void validateExistence(String cardNumber) throws BankRepositoryException {
         if (isNotPresent(cardNumber)) {
             throw new BankRepositoryException(ErrorMessage.CARD_DOES_NOT_EXISTS);
         }
     }
 
-    private boolean isNotPresent(final String cardNumber) {
+    private boolean isNotPresent(final String cardNumber) throws BankRepositoryException {
         return !exists(cardNumber);
     }
 }

@@ -26,7 +26,7 @@ public class BaseJsonApiTest {
     private WebApplicationContext webApplicationContext;
 
     @BeforeEach
-    public void setUp() {
+    public void setUp() throws Exception {
         mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
     }
 
