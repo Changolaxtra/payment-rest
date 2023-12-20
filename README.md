@@ -7,7 +7,7 @@ Implement  the functionality to create credit cards and modify their balance usi
 
 ### Test
 
-Once the code implementation is finished, uncomment the `@Test` in `PaymentApiTest` class.
+Once the code implementation is finished, comment/delete the `@Disabled` annotation in `PaymentApiTest` class and run those tests.
 
 #### Some Rules:
 - The project structure and classes can be modified.
