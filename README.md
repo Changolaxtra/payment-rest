@@ -12,4 +12,4 @@ Once the code implementation is finished, comment/delete the `@Disabled` annotat
 #### Some Rules:
 - The project structure and classes can be modified.
 - Please do not modify `thirdparty` package.
-- Please do not modify the endpoints and unit test.
+- Please do not modify the endpoints.
