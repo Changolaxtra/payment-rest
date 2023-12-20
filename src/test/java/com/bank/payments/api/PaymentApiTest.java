@@ -3,7 +3,7 @@ package com.bank.payments.api;
 import com.bank.payments.api.base.BaseJsonApiTest;
 import com.bank.payments.api.dto.CardPaymentRequest;
 import com.bank.payments.api.dto.CardPaymentResponse;
-import com.bank.payments.api.model.CreditCard;
+import com.bank.payments.api.thirdparty.model.CreditCard;
 import com.bank.payments.api.thirdparty.exception.BankRepositoryException;
 import com.bank.payments.api.thirdparty.repository.CreditCardRepository;
 import org.junit.jupiter.api.AfterEach;
@@ -19,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@Disabled
 public class PaymentApiTest extends BaseJsonApiTest {
 
     private static final String PROCESS_PAYMENT_ENDPOINT = "/card/payment/process";
@@ -44,7 +45,6 @@ public class PaymentApiTest extends BaseJsonApiTest {
         creditCardRepository.remove(CARD_NUMBER);
     }
 
-    @Disabled
     @Test
     public void givenWrongCvvForPaymentShouldBeUnsuccessful() throws Exception {
         final BigDecimal amount = new BigDecimal(100);
@@ -53,7 +53,6 @@ public class PaymentApiTest extends BaseJsonApiTest {
         assertFalse(response.isSuccessful());
     }
 
-    @Disabled
     @Test
     public void givenCorrectCardForPaymentShouldBeSuccessfulWithCorrectBalance() throws Exception {
         final BigDecimal amount = new BigDecimal(700);
@@ -63,7 +62,6 @@ public class PaymentApiTest extends BaseJsonApiTest {
         assertEquals(new BigDecimal(300), response.getBalance());
     }
 
-    @Disabled
     @Test
     public void givenGreaterAmountThanBalanceForPaymentShouldBeUnsuccessful() throws Exception {
         final BigDecimal amount = new BigDecimal(1500);
@@ -73,19 +71,23 @@ public class PaymentApiTest extends BaseJsonApiTest {
         assertFalse(response.isSuccessful());
     }
 
-    @Disabled
     @Test
     public void givenWrongCardForPaymentShouldBeUnsuccessful() throws Exception {
         final CardPaymentResponse response = makePayment(INVALID_CARD_NUMBER, CVV, BigDecimal.ONE);
         assertFalse(response.isSuccessful());
     }
 
-    @Disabled
     @Test
     public void givenNegativeAmountForPaymentShouldBeUnsuccessful() throws Exception {
         final BigDecimal negativeAmount = new BigDecimal("0.99").negate();
         final CardPaymentResponse response = makePayment(CARD_NUMBER, CVV,
                 negativeAmount);
+        assertFalse(response.isSuccessful());
+    }
+
+    @Test
+    public void givenNullAmountForPaymentShouldBeUnsuccessful() throws Exception {
+        final CardPaymentResponse response = makePayment(CARD_NUMBER, CVV, null);
         assertFalse(response.isSuccessful());
     }
 
